@@ -7,14 +7,14 @@ import useApi from '../hooks/useApi';
 import ApiErrorFallback from '../components/common/ApiErrorFallback';
 import AnimatedCircles from '../components/ui/AnimatedCircles';
 import {
-  MagnifyingGlassIcon,
-  ChartBarIcon,
-  ArrowsRightLeftIcon,
-  LightBulbIcon,
-  ChatBubbleLeftRightIcon,
-  ShieldCheckIcon,
-  StarIcon
-} from '@heroicons/react/24/outline';
+  Search as MagnifyingGlassIcon,
+  BarChart as ChartBarIcon,
+  ArrowLeftRight as ArrowsRightLeftIcon,
+  Lightbulb as LightBulbIcon,
+  MessageSquare as ChatBubbleLeftRightIcon,
+  ShieldCheck as ShieldCheckIcon,
+  Star as StarIcon
+} from 'lucide-react';
 import { Button } from '../common/components';
 
 interface TrendingProduct {
@@ -322,7 +322,7 @@ const HomePage: React.FC = () => {
                             {product.name}
                           </h3>
                           <div className="flex items-center space-x-1 bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
-                            <StarIcon className="h-4 w-4 fill-current" />
+                            <StarIcon className="h-4 w-4" />
                             <span className="text-sm font-semibold">{(product.score * 5).toFixed(1)}</span>
                           </div>
                         </div>
@@ -395,11 +395,11 @@ const HomePage: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.5 }}
           >
             <Button
-              to="/register"
+              to="/search"
               size="lg"
               className="bg-white text-indigo-600 hover:bg-gray-100 px-8 py-3 text-base font-semibold"
             >
-              Sign Up Free
+              Start Exploring
             </Button>
             <Button
               to="/about"

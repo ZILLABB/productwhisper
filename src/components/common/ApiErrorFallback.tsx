@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExclamationTriangleIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+import { AlertTriangle as ExclamationTriangleIcon, RotateCw as ArrowPathIcon } from 'lucide-react';
 
 interface ApiErrorFallbackProps {
   error?: Error | string;
@@ -30,7 +30,7 @@ const ApiErrorFallback: React.FC<ApiErrorFallbackProps> = ({
       <ExclamationTriangleIcon className="h-12 w-12 text-amber-500 mx-auto mb-4" />
       <h3 className="text-lg font-semibold text-gray-900 mb-2">Data Loading Error</h3>
       <p className="text-gray-600 mb-4">{message}</p>
-      
+
       {error && process.env.NODE_ENV === 'development' && (
         <div className="mb-4 p-3 bg-gray-50 rounded-lg text-left">
           <p className="text-red-600 text-sm font-mono break-all">
@@ -38,7 +38,7 @@ const ApiErrorFallback: React.FC<ApiErrorFallbackProps> = ({
           </p>
         </div>
       )}
-      
+
       {(retry || resetErrorBoundary) && (
         <button
           onClick={handleRetry}
