@@ -1,5 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { AlertTriangle } from 'lucide-react';
 
 interface Props {
   children: ReactNode;
@@ -53,7 +53,7 @@ class ErrorBoundary extends Component<Props, State> {
 
       return (
         <div className="flex flex-col items-center justify-center p-8 bg-white rounded-xl shadow-sm border border-gray-100 text-center">
-          <ExclamationTriangleIcon className="h-12 w-12 text-red-500 mb-4" />
+          <AlertTriangle className="h-12 w-12 text-red-500 mb-4" />
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Something went wrong</h2>
           <p className="text-gray-600 mb-4">
             We're sorry, but there was an error loading this content.
