@@ -7,8 +7,6 @@ import {
   FiSearch,
   FiBarChart2,
   FiRefreshCw,
-  
-  FiLogIn,
   FiChevronDown,
   FiBell,
   FiSettings
@@ -113,7 +111,7 @@ const Header = () => {
             {/* More dropdown */}
             <div className="relative">
               <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                onClick={toggleDropdown}
                 className="flex items-center px-4 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-primary transition-all duration-200"
               >
                 More
@@ -157,21 +155,7 @@ const Header = () => {
               <button className="p-2 rounded-full text-gray-500 hover:text-primary hover:bg-gray-100 transition-all duration-200 ml-1">
                 <FiSettings size={20} />
               </button>
-              <div className="ml-4 flex items-center">
-                <Link
-                  to="/login"
-                  className="flex items-center px-4 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-primary transition-all duration-200"
-                >
-                  <FiLogIn className="mr-2" />
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="ml-2 px-4 py-2 rounded-md text-sm font-medium bg-primary text-white hover:bg-primary-dark shadow-sm hover:shadow transition-all duration-200"
-                >
-                  Sign Up
-                </Link>
-              </div>
+              {/* Login/Signup buttons removed */}
             </div>
           </nav>
 
@@ -241,22 +225,7 @@ const Header = () => {
                 ))}
               </div>
 
-              {/* Mobile auth buttons */}
-              <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200 pb-4">
-                <Link
-                  to="/login"
-                  className="flex-1 mx-1 flex justify-center items-center px-4 py-3 rounded-lg text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all duration-200"
-                >
-                  <FiLogIn className="mr-2" />
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="flex-1 mx-1 flex justify-center items-center px-4 py-3 rounded-lg text-sm font-medium bg-primary text-white hover:bg-primary-dark shadow-sm hover:shadow transition-all duration-200"
-                >
-                  Sign Up
-                </Link>
-              </div>
+              {/* Mobile auth buttons removed */}
             </motion.div>
           )}
         </AnimatePresence>
