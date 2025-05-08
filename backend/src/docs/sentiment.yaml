@@ -1,0 +1,163 @@
+/**
+ * @swagger
+ * tags:
+ *   name: Sentiment
+ *   description: Sentiment analysis
+ */
+
+/**
+ * @swagger
+ * /sentiment/analyze:
+ *   post:
+ *     summary: Analyze text sentiment
+ *     description: Analyze the sentiment of a text
+ *     tags: [Sentiment]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - text
+ *             properties:
+ *               text:
+ *                 type: string
+ *                 example: This product is amazing! The sound quality is excellent and the battery life is impressive. However, it's a bit expensive.
+ *     responses:
+ *       200:
+ *         description: Sentiment analysis result
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     score:
+ *                       type: number
+ *                       format: float
+ *                       example: 0.75
+ *                     positiveAspects:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                       example:
+ *                         - sound quality
+ *                         - battery life
+ *                     negativeAspects:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                       example:
+ *                         - price
+ *                     entities:
+ *                       type: object
+ *                       example:
+ *                         sound quality:
+ *                           score: 0.9
+ *                         battery life:
+ *                           score: 0.85
+ *                         price:
+ *                           score: 0.3
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+
+/**
+ * @swagger
+ * /sentiment/compare:
+ *   post:
+ *     summary: Compare sentiment of multiple products
+ *     description: Compare the sentiment analysis of multiple products
+ *     tags: [Sentiment]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - productIds
+ *             properties:
+ *               productIds:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                 example: [1, 2, 3]
+ *     responses:
+ *       200:
+ *         description: Sentiment comparison result
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     products:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: integer
+ *                             example: 1
+ *                           name:
+ *                             type: string
+ *                             example: Premium Wireless Headphones
+ *                           sentimentScore:
+ *                             type: number
+ *                             format: float
+ *                             example: 0.85
+ *                           positiveAttributes:
+ *                             type: array
+ *                             items:
+ *                               type: object
+ *                               properties:
+ *                                 name:
+ *                                   type: string
+ *                                   example: sound quality
+ *                                 score:
+ *                                   type: number
+ *                                   format: float
+ *                                   example: 0.92
+ *                                 mentions:
+ *                                   type: integer
+ *                                   example: 45
+ *                           negativeAttributes:
+ *                             type: array
+ *                             items:
+ *                               type: object
+ *                               properties:
+ *                                 name:
+ *                                   type: string
+ *                                   example: price
+ *                                 score:
+ *                                   type: number
+ *                                   format: float
+ *                                   example: 0.35
+ *                                 mentions:
+ *                                   type: integer
+ *                                   example: 28
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       404:
+ *         description: One or more products not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */

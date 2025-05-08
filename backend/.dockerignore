@@ -1,0 +1,47 @@
+# Node.js
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# TypeScript
+dist
+coverage
+
+# Environment
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+logs
+*.log
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Tests
+__tests__
+*.test.ts
+*.spec.ts
+jest.config.js
+
+# Misc
+.DS_Store
+.github
+README.md
+LICENSE

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Memory Bank</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            blue: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">Test Memory Bank Component</h1>
+    
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h2 class="text-xl font-semibold mb-4">Instructions</h2>
+      <p class="mb-4">Click the blue button in the bottom right corner to open the Memory Bank.</p>
+      <p>The Memory Bank should display a list of memories about the ProductWhisper project.</p>
+    </div>
+    
+    <!-- Memory Bank Button (for visual reference) -->
+    <div class="fixed bottom-6 right-6 bg-blue-600 text-white p-3 rounded-full shadow-lg z-50">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+      </svg>
+    </div>
+    
+    <!-- Sample Memory Panel (for visual reference) -->
+    <div class="fixed top-0 right-0 h-full w-96 bg-white shadow-xl z-50 flex flex-col">
+      <div class="p-4 border-b flex justify-between items-center bg-blue-600 text-white">
+        <h2 class="text-xl font-semibold flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+          Memory Bank
+        </h2>
+        <button class="text-white hover:text-gray-200">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      
+      <div class="p-4 border-b">
+        <div class="flex flex-wrap gap-2">
+          <button class="px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-800 font-medium">
+            All
+          </button>
+          <button class="px-3 py-1 text-sm rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">
+            Product
+          </button>
+          <button class="px-3 py-1 text-sm rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">
+            Feature
+          </button>
+          <button class="px-3 py-1 text-sm rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">
+            Design
+          </button>
+        </div>
+      </div>
+      
+      <div class="flex-1 overflow-y-auto p-4">
+        <ul class="space-y-3">
+          <li class="bg-white border rounded-lg p-3 shadow-sm">
+            <div class="flex justify-between">
+              <span class="text-xs font-medium px-2 py-1 bg-blue-50 text-blue-700 rounded-full">
+                Product
+              </span>
+              <div class="flex space-x-1">
+                <button class="p-1 text-gray-500 hover:text-gray-700">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                </button>
+                <button class="p-1 text-red-500 hover:text-red-700">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <p class="mt-2 text-gray-700">ProductWhisper is a sentiment analysis application for product reviews with modern design.</p>
+            <div class="mt-2 text-xs text-gray-500">
+              <span>Created: 5/7/2023</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="p-4 border-t">
+        <div class="flex space-x-2 mb-2">
+          <select class="p-2 border rounded-md text-sm">
+            <option>Product</option>
+            <option>Feature</option>
+            <option>Design</option>
+            <option>Backend</option>
+            <option>Frontend</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="flex">
+          <input
+            type="text"
+            placeholder="Add a new memory..."
+            class="flex-1 p-2 border rounded-l-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          <button
+            class="bg-blue-600 text-white p-2 rounded-r-md hover:bg-blue-700"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

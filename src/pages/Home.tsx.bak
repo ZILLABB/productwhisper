@@ -1,0 +1,799 @@
+import { motion, useScroll, useTransform, useSpring, useAnimation } from 'framer-motion';
+import { FiSearch, FiStar, FiTrendingUp, FiShoppingBag, FiBarChart, FiHeart, FiShoppingCart, FiArrowDown } from 'react-icons/fi';
+import { useEffect, useRef } from 'react';
+
+const Home = () => {
+  // Scroll animations
+  const { scrollY } = useScroll();
+  const scrollYSpring = useSpring(scrollY, { stiffness: 100, damping: 30 });
+  const heroOpacity = useTransform(scrollYSpring, [0, 300], [1, 0]);
+  const heroScale = useTransform(scrollYSpring, [0, 300], [1, 0.9]);
+
+  // Ref for scroll indicator
+  const scrollIndicatorRef = useRef(null);
+
+  // Animation controls for features
+  const featuresControls = useAnimation();
+
+  useEffect(() => {
+    // Start features animation when component mounts
+    featuresControls.start('visible');
+
+    // Hide scroll indicator on scroll
+    const handleScroll = () => {
+      if (window.scrollY > 100 && scrollIndicatorRef.current) {
+        scrollIndicatorRef.current.style.opacity = '0';
+      } else if (scrollIndicatorRef.current) {
+        scrollIndicatorRef.current.style.opacity = '1';
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [featuresControls]);
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 30, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 10,
+        duration: 0.5
+      }
+    }
+  };
+
+  const buttonVariants = {
+    hover: {
+      scale: 1.05,
+      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 10
+      }
+    },
+    tap: {
+      scale: 0.95
+    }
+  };
+
+  // Feature data
+  const features = [
+    {
+      icon: <FiStar className="text-primary-500" size={24} />,
+      title: "Personalized Recommendations",
+      description: "Our AI-powered system learns your preferences to suggest products you'll love."
+    },
+    {
+      icon: <FiBarChart className="text-secondary-500" size={24} />,
+      title: "Expert Reviews",
+      description: "Detailed analysis from our product experts and verified community reviews."
+    },
+    {
+      icon: <FiTrendingUp className="text-accent-500" size={24} />,
+      title: "Price Tracking",
+      description: "Monitor price changes and get alerts when your favorite items go on sale."
+    }
+  ];
+
+  // Product data
+  const products = [
+    {
+      id: 1,
+      name: "Premium Wireless Headphones",
+      price: 249.99,
+      rating: 4.8,
+      image: "bg-primary-100"
+    },
+    {
+      id: 2,
+      name: "Smart Fitness Tracker",
+      price: 149.99,
+      rating: 4.6,
+      image: "bg-secondary-100"
+    },
+    {
+      id: 3,
+      name: "Ultra-Thin Laptop",
+      price: 1299.99,
+      rating: 4.9,
+      image: "bg-accent-100"
+    },
+    {
+      id: 4,
+      name: "Professional Camera Kit",
+      price: 899.99,
+      rating: 4.7,
+      image: "bg-primary-200"
+    }
+  ];
+
+  return (
+    <div className="pb-20">
+      {/* Hero Section */}
+      <section className="bg-gradient-primary text-white py-20 md:py-32 relative overflow-hidden">
+        {/* Animated background elements */}
+        <motion.div
+          className="absolute top-20 left-10 w-64 h-64 rounded-full bg-white opacity-5"
+          animate={{
+            scale: [1, 1.2, 1],
+            x: [0, 20, 0],
+            y: [0, -20, 0]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+        <motion.div
+          className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-accent-300 opacity-10"
+          animate={{
+            scale: [1, 1.3, 1],
+            x: [0, -30, 0],
+            y: [0, 30, 0]
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            className="max-w-3xl mx-auto text-center"
+            style={{ opacity: heroOpacity, scale: heroScale }}
+          >
+            <motion.div
+              className="flex justify-center mb-6"
+              initial={{ opacity: 0, y: -30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 100,
+                damping: 15,
+                delay: 0.1
+              }}
+            >
+              <img
+                src="/ProductWhisper Logo Design.png"
+                alt="ProductWhisper Logo"
+                className="h-24 w-24 rounded-full object-cover shadow-lg border-2 border-white"
+              />
+            </motion.div>
+            <motion.h1
+              className="text-4xl md:text-6xl font-serif font-bold mb-6"
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 100,
+                damping: 15,
+                delay: 0.2
+              }}
+            >
+              Discover Products That{" "}
+              <motion.span
+                className="text-accent-300 inline-block"
+                animate={{
+                  scale: [1, 1.1, 1],
+                  color: ["#fdba74", "#f97316", "#fdba74"]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }}
+              >
+                Inspire
+              </motion.span>
+            </motion.h1>
+
+            <motion.p
+              className="text-xl md:text-2xl mb-8 text-white opacity-90"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 50,
+                damping: 20,
+                delay: 0.4
+              }}
+            >
+              Your personal product discovery platform, tailored to your unique preferences
+            </motion.p>
+
+            <motion.div
+              className="flex flex-col sm:flex-row justify-center gap-4 mb-12"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 50,
+                damping: 20,
+                delay: 0.6
+              }}
+            >
+              <motion.button
+                className="inline-block bg-white text-gray-900 hover:bg-opacity-90 py-3 px-8 rounded-lg font-medium shadow-md"
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+              >
+                Get Started
+              </motion.button>
+              <motion.button
+                className="inline-block bg-transparent border-2 border-white hover:bg-white hover:bg-opacity-10 text-white py-3 px-8 rounded-lg font-medium"
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+              >
+                Learn More
+              </motion.button>
+            </motion.div>
+
+            <motion.div
+              className="relative max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 50,
+                damping: 20,
+                delay: 0.8
+              }}
+            >
+              <motion.div
+                className="relative"
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                <input
+                  type="text"
+                  placeholder="Search for products..."
+                  className="w-full py-4 px-6 pr-12 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-lg"
+                />
+                <motion.button
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-600 p-2 rounded-full hover:bg-primary-50 transition-colors"
+                  whileHover={{ scale: 1.2, rotate: 15 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <FiSearch size={20} />
+                </motion.button>
+              </motion.div>
+            </motion.div>
+
+            {/* Scroll indicator */}
+            <motion.div
+              className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white flex flex-col items-center"
+              ref={scrollIndicatorRef}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.5, duration: 1 }}
+            >
+              <p className="text-sm mb-2 opacity-80">Scroll to explore</p>
+              <motion.div
+                animate={{ y: [0, 10, 0] }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  repeatType: "loop"
+                }}
+              >
+                <FiArrowDown size={20} />
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-white relative overflow-hidden">
+        {/* Decorative elements */}
+        <motion.div
+          className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-primary-50"
+          animate={{
+            scale: [1, 1.1, 1],
+            rotate: [0, 10, 0]
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+        <motion.div
+          className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-secondary-50"
+          animate={{
+            scale: [1, 1.2, 1],
+            rotate: [0, -10, 0]
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 50,
+              damping: 20,
+              duration: 0.8
+            }}
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <div className="flex items-center justify-center mb-4">
+                <img
+                  src="/ProductWhisper Logo Design.png"
+                  alt="ProductWhisper Logo"
+                  className="h-12 w-12 rounded-full object-cover shadow-md mr-3"
+                />
+                <h2 className="text-3xl md:text-4xl font-serif font-bold">
+                  Why Choose <span className="text-primary-600">ProductWhisper</span>
+                </h2>
+              </div>
+            </motion.div>
+            <motion.p
+              className="text-lg text-gray-600 max-w-2xl mx-auto"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              We combine cutting-edge technology with expert curation to deliver the best product discovery experience.
+            </motion.p>
+          </motion.div>
+
+          <motion.div
+            className="grid md:grid-cols-3 gap-8"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            animate={featuresControls}
+          >
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                className="bg-white rounded-lg shadow-md p-8 border border-gray-100 relative z-10"
+                variants={itemVariants}
+                whileHover={{
+                  y: -10,
+                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                  backgroundColor: index === 0 ? "#f0f9ff" : index === 1 ? "#f5f3ff" : "#fff7ed",
+                  transition: { type: "spring", stiffness: 400, damping: 10 }
+                }}
+              >
+                <motion.div
+                  className={`mb-6 p-5 rounded-full inline-block ${
+                    index === 0 ? "bg-primary-100" : index === 1 ? "bg-secondary-100" : "bg-accent-100"
+                  }`}
+                  whileHover={{
+                    rotate: 5,
+                    scale: 1.1,
+                    transition: { type: "spring", stiffness: 300, damping: 10 }
+                  }}
+                >
+                  {feature.icon}
+                </motion.div>
+                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+                <p className="text-gray-600">{feature.description}</p>
+
+                <motion.div
+                  className="absolute bottom-0 left-0 w-full h-1 rounded-b-lg"
+                  style={{
+                    background: index === 0
+                      ? "linear-gradient(90deg, #0ea5e9, #38bdf8)"
+                      : index === 1
+                      ? "linear-gradient(90deg, #8b5cf6, #a78bfa)"
+                      : "linear-gradient(90deg, #f97316, #fb923c)"
+                  }}
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  transition={{ duration: 0.8, delay: 0.2 + (index * 0.1) }}
+                  viewport={{ once: true }}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Trending Products Section */}
+      <section className="py-20 bg-gray-50 relative overflow-hidden">
+        {/* Decorative elements */}
+        <motion.div
+          className="absolute top-40 left-0 w-32 h-32 rounded-full bg-primary-100 opacity-70"
+          animate={{
+            x: [0, 50, 0],
+            y: [0, 30, 0]
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+        <motion.div
+          className="absolute bottom-20 right-10 w-48 h-48 rounded-full bg-accent-100 opacity-60"
+          animate={{
+            x: [0, -30, 0],
+            y: [0, -40, 0]
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            className="flex flex-col md:flex-row md:justify-between md:items-center mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 50,
+              damping: 20
+            }}
+            viewport={{ once: true }}
+          >
+            <div>
+              <motion.h2
+                className="text-3xl md:text-4xl font-serif font-bold flex items-center"
+                initial={{ x: -20, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <motion.div
+                  className="flex items-center mr-3"
+                >
+                  <img
+                    src="/ProductWhisper Logo Design.png"
+                    alt="ProductWhisper Logo"
+                    className="h-10 w-10 rounded-full object-cover shadow-md mr-2"
+                  />
+                  <motion.div
+                    animate={{
+                      y: [0, 5, 0],
+                      rotate: [0, 5, 0]
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      repeatType: "reverse"
+                    }}
+                    className="text-primary-500"
+                  >
+                    <FiTrendingUp size={24} />
+                  </motion.div>
+                </motion.div>
+                Trending Products
+              </motion.h2>
+              <motion.p
+                className="text-gray-600 mt-2"
+                initial={{ x: -20, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                viewport={{ once: true }}
+              >
+                Discover what's popular right now
+              </motion.p>
+            </div>
+            <motion.button
+              className="hidden md:block bg-secondary-600 hover:bg-secondary-700 text-white py-3 px-8 rounded-lg font-medium shadow-md mt-4 md:mt-0"
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
+              View All
+            </motion.button>
+          </motion.div>
+
+          <motion.div
+            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+          >
+            {products.map((product, index) => (
+              <motion.div
+                key={product.id}
+                className="bg-white rounded-lg shadow-md overflow-hidden"
+                variants={itemVariants}
+                whileHover={{
+                  y: -12,
+                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                  transition: { type: "spring", stiffness: 400, damping: 10 }
+                }}
+                custom={index}
+              >
+                <motion.div
+                  className={`h-48 ${product.image} relative`}
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 10 }}
+                >
+                  <motion.button
+                    className="absolute top-3 right-3 p-2 bg-white bg-opacity-80 rounded-full hover:bg-white transition-colors"
+                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <motion.div
+                      whileHover={{ color: "#ef4444" }}
+                    >
+                      <FiHeart className="text-gray-600" size={18} />
+                    </motion.div>
+                  </motion.button>
+
+                  {/* Product badge */}
+                  <motion.div
+                    className="absolute top-3 left-3 bg-accent-500 text-white text-xs font-bold px-2 py-1 rounded"
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.5 + (index * 0.1) }}
+                  >
+                    {index === 0 ? "Best Seller" : index === 1 ? "New" : index === 2 ? "Hot" : "Featured"}
+                  </motion.div>
+                </motion.div>
+
+                <div className="p-5">
+                  <div className="flex items-center mb-2">
+                    <motion.div
+                      className="flex items-center text-accent-500"
+                      whileHover={{ scale: 1.1, x: 3 }}
+                    >
+                      <FiStar size={16} />
+                      <span className="ml-1 text-sm font-medium">{product.rating}</span>
+                    </motion.div>
+                    <span className="mx-2 text-gray-300">•</span>
+                    <span className="text-sm text-gray-500">Premium</span>
+                  </div>
+
+                  <h3 className="font-bold text-lg mb-1">{product.name}</h3>
+
+                  <div className="flex justify-between items-center mt-4">
+                    <motion.span
+                      className="font-bold text-gray-900"
+                      whileHover={{ scale: 1.1, color: "#0ea5e9" }}
+                    >
+                      ${product.price}
+                    </motion.span>
+                    <motion.button
+                      className="p-2 bg-primary-50 text-primary-600 rounded-full hover:bg-primary-100 transition-colors"
+                      whileHover={{
+                        scale: 1.2,
+                        backgroundColor: "#0ea5e9",
+                        color: "#ffffff"
+                      }}
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      <FiShoppingCart size={18} />
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <motion.div
+            className="text-center mt-10 md:hidden"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <motion.button
+              className="bg-secondary-600 hover:bg-secondary-700 text-white py-3 px-8 rounded-lg font-medium shadow-md"
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
+              View All Products
+            </motion.button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-secondary text-white relative overflow-hidden">
+        {/* Animated background elements */}
+        <motion.div
+          className="absolute top-0 left-0 w-full h-full"
+          style={{
+            background: "radial-gradient(circle at 20% 30%, rgba(124, 58, 237, 0.4) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(249, 115, 22, 0.4) 0%, transparent 40%)"
+          }}
+          animate={{
+            opacity: [0.5, 0.7, 0.5]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+
+        {/* Floating particles */}
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full bg-white opacity-20"
+            style={{
+              width: Math.random() * 60 + 20,
+              height: Math.random() * 60 + 20,
+              top: `${Math.random() * 80 + 10}%`,
+              left: `${Math.random() * 80 + 10}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              x: [0, Math.random() * 40 - 20, 0],
+              scale: [1, Math.random() * 0.3 + 0.8, 1],
+            }}
+            transition={{
+              duration: Math.random() * 5 + 10,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+          />
+        ))}
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            className="max-w-3xl mx-auto text-center"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 50,
+              damping: 20
+            }}
+            viewport={{ once: true, amount: 0.4 }}
+          >
+            <motion.div
+              className="flex justify-center mb-6"
+              initial={{ scale: 0.8, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <img
+                src="/ProductWhisper Logo Design.png"
+                alt="ProductWhisper Logo"
+                className="h-20 w-20 rounded-full object-cover shadow-lg border-2 border-white/30"
+              />
+            </motion.div>
+            <motion.h2
+              className="text-3xl md:text-4xl font-serif font-bold mb-6"
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              Ready to Discover{" "}
+              <motion.span
+                animate={{
+                  color: ["#fdba74", "#ffffff", "#fdba74"]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }}
+              >
+                Amazing
+              </motion.span>{" "}
+              Products?
+            </motion.h2>
+
+            <motion.p
+              className="text-xl mb-10 text-white opacity-90"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              Join thousands of satisfied users who have found their perfect products through ProductWhisper.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              viewport={{ once: true }}
+            >
+              <motion.button
+                className="inline-flex items-center justify-center bg-white text-gray-900 py-4 px-10 rounded-lg font-medium shadow-lg"
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+                }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <motion.div
+                  animate={{
+                    rotate: [0, 10, 0],
+                    scale: [1, 1.1, 1]
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse"
+                  }}
+                  className="mr-2"
+                >
+                  <FiShoppingBag size={20} />
+                </motion.div>
+                Start Exploring
+              </motion.button>
+            </motion.div>
+
+            {/* Trust indicators */}
+            <motion.div
+              className="mt-12 flex flex-wrap justify-center gap-6 items-center"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <p className="text-sm opacity-80 font-medium">Trusted by:</p>
+              {['Company A', 'Company B', 'Company C', 'Company D'].map((company, index) => (
+                <motion.div
+                  key={company}
+                  className="bg-white/10 px-4 py-2 rounded-md text-sm font-medium"
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.9 + (index * 0.1) }}
+                  viewport={{ once: true }}
+                  whileHover={{ backgroundColor: "rgba(255,255,255,0.2)" }}
+                >
+                  {company}
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default Home;

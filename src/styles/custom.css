@@ -1,0 +1,42 @@
+/* Custom styles using Tailwind's @layer directives */
+
+/* Custom CSS Variables */
+:root {
+  --primary-color: #0ea5e9;
+  --primary-dark: #0369a1;
+  --secondary-color: #8b5cf6;
+  --secondary-dark: #6d28d9;
+  --accent-color: #f97316;
+  --accent-dark: #ea580c;
+}
+
+/* Custom utility classes */
+.bg-premium-gradient {
+  background: linear-gradient(to right, #2563eb, #8b5cf6);
+}
+
+.bg-premium-gradient-alt {
+  background: linear-gradient(to right, #8b5cf6, #f97316);
+}
+
+.container-custom {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-custom {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-custom {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}

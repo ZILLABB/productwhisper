@@ -1,0 +1,1203 @@
+import { motion, useScroll, useTransform, useSpring, useAnimation } from 'framer-motion';
+import { FiTarget, FiUsers, FiAward, FiTrendingUp, FiGlobe, FiSmile, FiArrowDown, FiMail, FiLinkedin, FiTwitter, FiGithub } from 'react-icons/fi';
+import { useEffect, useRef } from 'react';
+
+const About = () => {
+  // Scroll animations
+  const { scrollY } = useScroll();
+  const scrollYSpring = useSpring(scrollY, { stiffness: 100, damping: 30 });
+  const heroOpacity = useTransform(scrollYSpring, [0, 300], [1, 0]);
+  const heroScale = useTransform(scrollYSpring, [0, 300], [1, 0.9]);
+
+  // Refs for scroll indicator
+  const scrollIndicatorRef = useRef(null);
+
+  // Animation controls
+  const valuesControls = useAnimation();
+  const teamControls = useAnimation();
+
+  useEffect(() => {
+    // Start animations when component mounts
+    valuesControls.start('visible');
+    teamControls.start('visible');
+
+    // Hide scroll indicator on scroll
+    const handleScroll = () => {
+      if (window.scrollY > 100 && scrollIndicatorRef.current) {
+        scrollIndicatorRef.current.style.opacity = '0';
+      } else if (scrollIndicatorRef.current) {
+        scrollIndicatorRef.current.style.opacity = '1';
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [valuesControls, teamControls]);
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 30, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 10,
+        duration: 0.5
+      }
+    }
+  };
+
+  const buttonVariants = {
+    hover: {
+      scale: 1.05,
+      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 10
+      }
+    },
+    tap: {
+      scale: 0.95
+    }
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 10,
+        delay: i * 0.1
+      }
+    })
+  };
+
+  // Team members data
+  const teamMembers = [
+    {
+      name: "Jane Doe",
+      position: "Founder & CEO",
+      bio: "Former product lead at major tech companies with a passion for connecting people with products they'll love.",
+      image: "bg-primary-100"
+    },
+    {
+      name: "John Smith",
+      position: "CTO",
+      bio: "AI and machine learning expert with 15+ years of experience building recommendation systems.",
+      image: "bg-secondary-100"
+    },
+    {
+      name: "Emily Johnson",
+      position: "Head of Product",
+      bio: "Product strategist focused on creating intuitive user experiences that delight customers.",
+      image: "bg-accent-100"
+    },
+    {
+      name: "Michael Chen",
+      position: "Lead Designer",
+      bio: "Award-winning designer with a keen eye for aesthetics and user-centered design principles.",
+      image: "bg-primary-200"
+    }
+  ];
+
+  // Values data
+  const values = [
+    {
+      icon: <FiTarget />,
+      title: "Customer Focus",
+      description: "We put our users first in everything we do, constantly seeking feedback to improve."
+    },
+    {
+      icon: <FiAward />,
+      title: "Quality",
+      description: "We're committed to recommending only the highest quality products that meet our standards."
+    },
+    {
+      icon: <FiTrendingUp />,
+      title: "Innovation",
+      description: "We continuously evolve our technology to provide the best product discovery experience."
+    },
+    {
+      icon: <FiUsers />,
+      title: "Community",
+      description: "We foster a community of passionate users who share insights and recommendations."
+    },
+    {
+      icon: <FiGlobe />,
+      title: "Sustainability",
+      description: "We promote products that are environmentally responsible and ethically produced."
+    },
+    {
+      icon: <FiSmile />,
+      title: "Joy",
+      description: "We believe finding the perfect product should be a delightful and rewarding experience."
+    }
+  ];
+
+  return (
+    <div className="pb-20">
+      {/* Hero Section */}
+      <section className="bg-gradient-primary text-white py-20 md:py-32 relative overflow-hidden">
+        {/* Animated background elements */}
+        <motion.div
+          className="absolute top-20 left-10 w-64 h-64 rounded-full bg-white opacity-5"
+          animate={{
+            scale: [1, 1.2, 1],
+            x: [0, 20, 0],
+            y: [0, -20, 0]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+        <motion.div
+          className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-accent-300 opacity-10"
+          animate={{
+            scale: [1, 1.3, 1],
+            x: [0, -30, 0],
+            y: [0, 30, 0]
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl relative z-10">
+          <motion.div
+            className="max-w-3xl mx-auto text-center"
+            style={{ opacity: heroOpacity, scale: heroScale }}
+          >
+            <motion.h1
+              className="text-4xl md:text-6xl font-serif font-bold mb-6"
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 100,
+                damping: 15,
+                delay: 0.2
+              }}
+            >
+              About{" "}
+              <motion.span
+                className="text-accent-300 inline-block"
+                animate={{
+                  scale: [1, 1.1, 1],
+                  color: ["#fdba74", "#f97316", "#fdba74"]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }}
+              >
+                ProductWhisper
+              </motion.span>
+            </motion.h1>
+
+            <motion.p
+              className="text-xl md:text-2xl mb-8 text-white opacity-90"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 50,
+                damping: 20,
+                delay: 0.4
+              }}
+            >
+              Our story, mission, and the team behind the platform
+            </motion.p>
+
+            {/* Scroll indicator */}
+            <motion.div
+              className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white flex flex-col items-center"
+              ref={scrollIndicatorRef}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.5, duration: 1 }}
+            >
+              <p className="text-sm mb-2 opacity-80">Scroll to explore</p>
+              <motion.div
+                animate={{ y: [0, 10, 0] }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  repeatType: "loop"
+                }}
+              >
+                <FiArrowDown size={20} />
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Mission Section */}
+      <section className="py-20 bg-white relative overflow-hidden">
+        {/* Decorative elements */}
+        <motion.div
+          className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-primary-50"
+          animate={{
+            scale: [1, 1.1, 1],
+            rotate: [0, 10, 0]
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl relative z-10">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 50,
+                damping: 20,
+                duration: 0.8
+              }}
+              viewport={{ once: true, amount: 0.3 }}
+            >
+              <motion.div
+                className="h-96 bg-primary-100 rounded-lg shadow-lg relative overflow-hidden"
+                whileHover={{
+                  scale: 1.02,
+                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+                }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                <motion.div
+                  className="absolute inset-0 bg-gradient-primary opacity-20"
+                  animate={{
+                    opacity: [0.1, 0.3, 0.1]
+                  }}
+                  transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    repeatType: "reverse"
+                  }}
+                />
+
+                <motion.div
+                  className="absolute inset-0 flex items-center justify-center"
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.3 }}
+                  viewport={{ once: true }}
+                >
+                  <motion.div
+                    animate={{
+                      y: [0, -10, 0],
+                      scale: [1, 1.05, 1]
+                    }}
+                    transition={{
+                      duration: 5,
+                      repeat: Infinity,
+                      repeatType: "reverse"
+                    }}
+                  >
+                    <span className="text-6xl font-serif font-bold text-primary-600 drop-shadow-md">Our Mission</span>
+                  </motion.div>
+                </motion.div>
+
+                {/* Floating elements */}
+                {[...Array(5)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute rounded-full bg-primary-300"
+                    style={{
+                      width: Math.random() * 30 + 10,
+                      height: Math.random() * 30 + 10,
+                      top: `${Math.random() * 80 + 10}%`,
+                      left: `${Math.random() * 80 + 10}%`,
+                      opacity: 0.3
+                    }}
+                    animate={{
+                      y: [0, -30, 0],
+                      x: [0, Math.random() * 20 - 10, 0],
+                      opacity: [0.2, 0.5, 0.2]
+                    }}
+                    transition={{
+                      duration: Math.random() * 5 + 5,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                    }}
+                  />
+                ))}
+              </motion.div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 50,
+                damping: 20,
+                duration: 0.8,
+                delay: 0.2
+              }}
+              viewport={{ once: true, amount: 0.3 }}
+            >
+              <motion.h2
+                className="text-3xl md:text-4xl font-serif font-bold mb-6 text-gray-900"
+                initial={{ opacity: 0, y: -20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+              >
+                Our <span className="text-primary-600">Mission</span>
+              </motion.h2>
+
+              <div className="space-y-6 text-lg text-gray-700">
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  At ProductWhisper, we believe that finding the right products should be easy and enjoyable.
+                  Our mission is to help people discover products that truly match their needs and preferences,
+                  saving them time and ensuring satisfaction with their purchases.
+                </motion.p>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  viewport={{ once: true }}
+                >
+                  We leverage advanced algorithms and a passionate community to provide personalized
+                  recommendations and honest reviews, making the shopping experience better for everyone.
+                </motion.p>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  viewport={{ once: true }}
+                >
+                  By combining cutting-edge AI technology with human curation, we create a unique platform
+                  that understands your preferences better than any other service, connecting you with
+                  products that will truly enhance your life.
+                </motion.p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Story Section */}
+      <section className="py-20 bg-gray-50 relative overflow-hidden">
+        {/* Decorative elements */}
+        <motion.div
+          className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-secondary-50"
+          animate={{
+            scale: [1, 1.1, 1],
+            rotate: [0, -10, 0]
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl relative z-10">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <motion.div
+              className="order-2 md:order-1"
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 50,
+                damping: 20,
+                duration: 0.8
+              }}
+              viewport={{ once: true, amount: 0.3 }}
+            >
+              <motion.h2
+                className="text-3xl md:text-4xl font-serif font-bold mb-6 text-gray-900"
+                initial={{ opacity: 0, y: -20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+              >
+                Our <span className="text-secondary-600">Story</span>
+              </motion.h2>
+
+              <div className="space-y-6 text-lg text-gray-700">
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  ProductWhisper was founded in 2023 by a group of tech enthusiasts who were frustrated
+                  with the overwhelming number of options available when shopping online. They wanted to
+                  create a platform that would cut through the noise and help people find exactly what
+                  they're looking for.
+                </motion.p>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  viewport={{ once: true }}
+                >
+                  What started as a small project has grown into a thriving platform with thousands of
+                  users who trust our recommendations and contribute to our community.
+                </motion.p>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  viewport={{ once: true }}
+                >
+                  Today, we're proud to be one of the fastest-growing product discovery platforms,
+                  with a dedicated team working tirelessly to improve our technology and expand our
+                  offerings to serve you better.
+                </motion.p>
+
+                {/* Timeline */}
+                <motion.div
+                  className="mt-8 pt-6 border-t border-gray-200"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.5 }}
+                  viewport={{ once: true }}
+                >
+                  <h3 className="text-lg font-bold mb-4 text-gray-900">Our Journey</h3>
+                  <div className="space-y-4">
+                    {[
+                      { year: "2023", event: "ProductWhisper was founded" },
+                      { year: "2023", event: "Launched beta version with 500 users" },
+                      { year: "2024", event: "Reached 10,000 active monthly users" },
+                      { year: "2024", event: "Expanded team and product offerings" }
+                    ].map((item, i) => (
+                      <motion.div
+                        key={i}
+                        className="flex items-start"
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.5, delay: 0.2 + (i * 0.1) }}
+                        viewport={{ once: true }}
+                      >
+                        <div className="flex-shrink-0 w-16 font-bold text-secondary-600">{item.year}</div>
+                        <div className="flex-grow">{item.event}</div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="order-1 md:order-2"
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 50,
+                damping: 20,
+                duration: 0.8,
+                delay: 0.2
+              }}
+              viewport={{ once: true, amount: 0.3 }}
+            >
+              <motion.div
+                className="h-96 bg-secondary-100 rounded-lg shadow-lg relative overflow-hidden"
+                whileHover={{
+                  scale: 1.02,
+                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+                }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                <motion.div
+                  className="absolute inset-0 bg-gradient-secondary opacity-20"
+                  animate={{
+                    opacity: [0.1, 0.3, 0.1]
+                  }}
+                  transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    repeatType: "reverse"
+                  }}
+                />
+
+                <motion.div
+                  className="absolute inset-0 flex items-center justify-center"
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.3 }}
+                  viewport={{ once: true }}
+                >
+                  <motion.div
+                    animate={{
+                      y: [0, -10, 0],
+                      scale: [1, 1.05, 1]
+                    }}
+                    transition={{
+                      duration: 5,
+                      repeat: Infinity,
+                      repeatType: "reverse"
+                    }}
+                  >
+                    <span className="text-6xl font-serif font-bold text-secondary-600 drop-shadow-md">Our Story</span>
+                  </motion.div>
+                </motion.div>
+
+                {/* Floating elements */}
+                {[...Array(5)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute rounded-full bg-secondary-300"
+                    style={{
+                      width: Math.random() * 30 + 10,
+                      height: Math.random() * 30 + 10,
+                      top: `${Math.random() * 80 + 10}%`,
+                      left: `${Math.random() * 80 + 10}%`,
+                      opacity: 0.3
+                    }}
+                    animate={{
+                      y: [0, -30, 0],
+                      x: [0, Math.random() * 20 - 10, 0],
+                      opacity: [0.2, 0.5, 0.2]
+                    }}
+                    transition={{
+                      duration: Math.random() * 5 + 5,
+                      repeat: Infinity,
+                      repeatType: "reverse",
+                    }}
+                  />
+                ))}
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Values Section */}
+      <section className="py-20 bg-white relative overflow-hidden">
+        {/* Decorative elements */}
+        <motion.div
+          className="absolute top-40 right-0 w-32 h-32 rounded-full bg-primary-100 opacity-70"
+          animate={{
+            x: [0, -50, 0],
+            y: [0, 30, 0]
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+        <motion.div
+          className="absolute bottom-20 left-10 w-48 h-48 rounded-full bg-accent-100 opacity-60"
+          animate={{
+            x: [0, 30, 0],
+            y: [0, -40, 0]
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl relative z-10">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 50,
+              damping: 20,
+              duration: 0.8
+            }}
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4 text-gray-900">
+                Our <span className="text-primary-600">Values</span>
+              </h2>
+            </motion.div>
+            <motion.p
+              className="text-lg text-gray-600 max-w-2xl mx-auto"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              These core principles guide everything we do at ProductWhisper
+            </motion.p>
+          </motion.div>
+
+          <motion.div
+            className="grid md:grid-cols-3 gap-8"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+            animate={valuesControls}
+          >
+            {values.map((value, index) => (
+              <motion.div
+                key={index}
+                className="bg-white rounded-lg shadow-md p-8 border border-gray-100 text-center relative z-10"
+                custom={index}
+                variants={cardVariants}
+                whileHover={{
+                  y: -10,
+                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                  backgroundColor:
+                    index % 3 === 0 ? "#f0f9ff" :
+                    index % 3 === 1 ? "#f5f3ff" :
+                    "#fff7ed",
+                  transition: { type: "spring", stiffness: 400, damping: 10 }
+                }}
+              >
+                <motion.div
+                  className={`mb-6 p-5 rounded-full inline-block ${
+                    index % 3 === 0 ? "bg-primary-100 text-primary-600" :
+                    index % 3 === 1 ? "bg-secondary-100 text-secondary-600" :
+                    "bg-accent-100 text-accent-600"
+                  } text-2xl`}
+                  whileHover={{
+                    rotate: 5,
+                    scale: 1.1,
+                    transition: { type: "spring", stiffness: 300, damping: 10 }
+                  }}
+                >
+                  {value.icon}
+                </motion.div>
+
+                <motion.h3
+                  className="text-xl font-bold mb-3 text-gray-900"
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 + (index * 0.1) }}
+                  viewport={{ once: true }}
+                >
+                  {value.title}
+                </motion.h3>
+
+                <motion.p
+                  className="text-gray-600"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 + (index * 0.1) }}
+                  viewport={{ once: true }}
+                >
+                  {value.description}
+                </motion.p>
+
+                <motion.div
+                  className="absolute bottom-0 left-0 w-full h-1 rounded-b-lg"
+                  style={{
+                    background:
+                      index % 3 === 0 ? "linear-gradient(90deg, #0ea5e9, #38bdf8)" :
+                      index % 3 === 1 ? "linear-gradient(90deg, #8b5cf6, #a78bfa)" :
+                      "linear-gradient(90deg, #f97316, #fb923c)"
+                  }}
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  transition={{ duration: 0.8, delay: 0.2 + (index * 0.1) }}
+                  viewport={{ once: true }}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section className="py-20 bg-gray-50 relative overflow-hidden">
+        {/* Decorative elements */}
+        <motion.div
+          className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-primary-50"
+          animate={{
+            scale: [1, 1.2, 1],
+            rotate: [0, -10, 0]
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+        <motion.div
+          className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full bg-secondary-50"
+          animate={{
+            scale: [1, 1.1, 1],
+            rotate: [0, 10, 0]
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl relative z-10">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 50,
+              damping: 20,
+              duration: 0.8
+            }}
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4 text-gray-900">
+                Meet Our <span className="text-accent-600">Team</span>
+              </h2>
+            </motion.div>
+            <motion.p
+              className="text-lg text-gray-600 max-w-2xl mx-auto"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              The passionate people behind ProductWhisper
+            </motion.p>
+          </motion.div>
+
+          <motion.div
+            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+            animate={teamControls}
+          >
+            {teamMembers.map((member, index) => (
+              <motion.div
+                key={index}
+                className="bg-white rounded-lg shadow-md overflow-hidden"
+                custom={index}
+                variants={cardVariants}
+                whileHover={{
+                  y: -12,
+                  boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                  transition: { type: "spring", stiffness: 400, damping: 10 }
+                }}
+              >
+                <motion.div
+                  className={`h-64 ${member.image} relative overflow-hidden`}
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 10 }}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-30"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 0.3 }}
+                    transition={{ duration: 0.5, delay: 0.2 + (index * 0.1) }}
+                    viewport={{ once: true }}
+                  />
+
+                  <motion.div
+                    className="absolute inset-0 flex items-center justify-center"
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.3 + (index * 0.1) }}
+                    viewport={{ once: true }}
+                  >
+                    <motion.span
+                      className="text-5xl font-serif font-bold text-white drop-shadow-lg"
+                      animate={{
+                        y: [0, -5, 0],
+                        opacity: [0.7, 0.9, 0.7]
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        repeatType: "reverse"
+                      }}
+                    >
+                      {member.name.split(' ').map(n => n[0]).join('')}
+                    </motion.span>
+                  </motion.div>
+
+                  {/* Social media icons */}
+                  <motion.div
+                    className="absolute bottom-4 right-4 flex space-x-2"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.5 + (index * 0.1) }}
+                    viewport={{ once: true }}
+                  >
+                    {[FiLinkedin, FiTwitter, FiMail].map((Icon, i) => (
+                      <motion.div
+                        key={i}
+                        className="p-2 bg-white/80 rounded-full text-gray-800 cursor-pointer hover:bg-white"
+                        whileHover={{
+                          scale: 1.2,
+                          backgroundColor: "#ffffff"
+                        }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <Icon size={16} />
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </motion.div>
+
+                <div className="p-6">
+                  <motion.h3
+                    className="font-bold text-xl mb-1 text-gray-900"
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 + (index * 0.1) }}
+                    viewport={{ once: true }}
+                  >
+                    {member.name}
+                  </motion.h3>
+
+                  <motion.p
+                    className="text-primary-600 font-medium mb-4"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.3 + (index * 0.1) }}
+                    viewport={{ once: true }}
+                  >
+                    {member.position}
+                  </motion.p>
+
+                  <motion.p
+                    className="text-gray-600"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.4 + (index * 0.1) }}
+                    viewport={{ once: true }}
+                  >
+                    {member.bio}
+                  </motion.p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Join the team button */}
+          <motion.div
+            className="text-center mt-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <motion.button
+              className="inline-flex items-center justify-center px-6 py-3 bg-accent-500 hover:bg-accent-600 text-white font-medium rounded-lg shadow-md"
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Join Our Team
+            </motion.button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Join Us CTA */}
+      <section className="py-20 bg-gradient-primary text-white relative overflow-hidden">
+        {/* Animated background elements */}
+        <motion.div
+          className="absolute top-0 left-0 w-full h-full"
+          style={{
+            background: "radial-gradient(circle at 20% 30%, rgba(14, 165, 233, 0.4) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(249, 115, 22, 0.4) 0%, transparent 40%)"
+          }}
+          animate={{
+            opacity: [0.5, 0.7, 0.5]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+
+        {/* Floating particles */}
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full bg-white opacity-20"
+            style={{
+              width: Math.random() * 60 + 20,
+              height: Math.random() * 60 + 20,
+              top: `${Math.random() * 80 + 10}%`,
+              left: `${Math.random() * 80 + 10}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              x: [0, Math.random() * 40 - 20, 0],
+              scale: [1, Math.random() * 0.3 + 0.8, 1],
+            }}
+            transition={{
+              duration: Math.random() * 5 + 10,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+          />
+        ))}
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl relative z-10">
+          <motion.div
+            className="max-w-3xl mx-auto text-center"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 50,
+              damping: 20
+            }}
+            viewport={{ once: true, amount: 0.4 }}
+          >
+            <motion.h2
+              className="text-3xl md:text-4xl font-serif font-bold mb-6"
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              Join Our{" "}
+              <motion.span
+                animate={{
+                  color: ["#fdba74", "#ffffff", "#fdba74"]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }}
+              >
+                Journey
+              </motion.span>
+            </motion.h2>
+
+            <motion.p
+              className="text-xl mb-8 text-white opacity-90"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              Become part of our community and help us shape the future of product discovery.
+            </motion.p>
+
+            {/* Newsletter Subscription */}
+            <motion.div
+              className="bg-white/10 backdrop-blur-sm p-8 rounded-lg mb-10 max-w-xl mx-auto border border-white/20"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 50,
+                damping: 20,
+                delay: 0.2
+              }}
+              viewport={{ once: true }}
+              whileHover={{
+                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                backgroundColor: "rgba(255, 255, 255, 0.15)"
+              }}
+            >
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                viewport={{ once: true }}
+              >
+                <h3 className="text-xl font-bold mb-4">Stay Updated</h3>
+                <p className="mb-6 text-white/80">
+                  Subscribe to our newsletter for the latest updates, product recommendations, and exclusive offers.
+                </p>
+              </motion.div>
+
+              <motion.form
+                className="flex flex-col sm:flex-row gap-3"
+                initial={{ y: 20, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                viewport={{ once: true }}
+              >
+                <motion.div
+                  className="flex-grow relative"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
+                  <input
+                    type="email"
+                    placeholder="Your email address"
+                    className="w-full px-4 py-3 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-500 shadow-md"
+                    required
+                  />
+                  <motion.div
+                    className="absolute inset-0 rounded-lg border-2 border-white/30 pointer-events-none"
+                    animate={{
+                      opacity: [0.2, 0.5, 0.2]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatType: "reverse"
+                    }}
+                  />
+                </motion.div>
+
+                <motion.button
+                  type="submit"
+                  className="px-6 py-3 bg-accent-500 text-white font-medium rounded-lg shadow-md whitespace-nowrap"
+                  whileHover={{
+                    scale: 1.05,
+                    backgroundColor: "#fb923c",
+                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Subscribe
+                </motion.button>
+              </motion.form>
+            </motion.div>
+
+            {/* CTA Buttons */}
+            <motion.div
+              className="flex flex-col sm:flex-row justify-center gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              viewport={{ once: true }}
+            >
+              <motion.button
+                className="inline-flex items-center justify-center px-6 py-3 bg-white text-gray-900 font-medium rounded-lg shadow-md"
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+              >
+                <motion.span
+                  animate={{
+                    x: [0, 2, 0]
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse"
+                  }}
+                >
+                  Join Our Team
+                </motion.span>
+              </motion.button>
+
+              <motion.button
+                className="inline-flex items-center justify-center px-6 py-3 bg-transparent border-2 border-white text-white font-medium rounded-lg"
+                variants={buttonVariants}
+                whileHover="hover"
+                whileTap="tap"
+              >
+                <motion.span
+                  animate={{
+                    x: [0, 2, 0]
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatType: "reverse"
+                  }}
+                >
+                  Partner With Us
+                </motion.span>
+              </motion.button>
+            </motion.div>
+
+            {/* Social proof */}
+            <motion.div
+              className="mt-16 pt-8 border-t border-white/20 flex flex-wrap justify-center gap-6 items-center"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <p className="text-sm opacity-80 font-medium">Join our growing community:</p>
+              <motion.div
+                className="flex items-center gap-2"
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.9 }}
+                viewport={{ once: true }}
+              >
+                <span className="text-2xl font-bold">10K+</span>
+                <span className="text-sm opacity-80">Active Users</span>
+              </motion.div>
+              <motion.div
+                className="flex items-center gap-2"
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 1.0 }}
+                viewport={{ once: true }}
+              >
+                <span className="text-2xl font-bold">500+</span>
+                <span className="text-sm opacity-80">Products</span>
+              </motion.div>
+              <motion.div
+                className="flex items-center gap-2"
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 1.1 }}
+                viewport={{ once: true }}
+              >
+                <span className="text-2xl font-bold">50+</span>
+                <span className="text-sm opacity-80">Team Members</span>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default About;

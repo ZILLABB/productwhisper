@@ -1,0 +1,623 @@
+import { useState, useRef, useEffect } from 'react';
+import { motion, useScroll, useTransform, useSpring, useAnimation } from 'framer-motion';
+import { FiMail, FiPhone, FiMapPin, FiSend, FiUser, FiMessageSquare, FiArrowDown,
+         FiFacebook, FiTwitter, FiInstagram, FiLinkedin, FiCheck, FiClock } from 'react-icons/fi';
+
+const Contact = () => {
+  // Scroll animations
+  const { scrollY } = useScroll();
+  const scrollYSpring = useSpring(scrollY, { stiffness: 100, damping: 30 });
+  const heroOpacity = useTransform(scrollYSpring, [0, 300], [1, 0]);
+  const heroScale = useTransform(scrollYSpring, [0, 300], [1, 0.9]);
+
+  // Refs for scroll indicator
+  const scrollIndicatorRef = useRef(null);
+
+  // Animation controls
+  const contactInfoControls = useAnimation();
+  const formControls = useAnimation();
+  const mapControls = useAnimation();
+
+  useEffect(() => {
+    // Start animations when component mounts
+    contactInfoControls.start('visible');
+    formControls.start('visible');
+    mapControls.start('visible');
+
+    // Hide scroll indicator on scroll
+    const handleScroll = () => {
+      if (window.scrollY > 100 && scrollIndicatorRef.current) {
+        scrollIndicatorRef.current.style.opacity = '0';
+      } else if (scrollIndicatorRef.current) {
+        scrollIndicatorRef.current.style.opacity = '1';
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [contactInfoControls, formControls, mapControls]);
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 30, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 10,
+        duration: 0.5
+      }
+    }
+  };
+
+  const buttonVariants = {
+    hover: {
+      scale: 1.05,
+      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 10
+      }
+    },
+    tap: {
+      scale: 0.95
+    }
+  };
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+
+  const [formStatus, setFormStatus] = useState({
+    isSubmitting: false,
+    isSubmitted: false,
+    error: null
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormStatus({ isSubmitting: true, isSubmitted: false, error: null });
+
+    try {
+      // Simulate API call with timeout
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Here you would typically send the form data to your backend
+      console.log('Form submitted:', formData);
+
+      // Show success state
+      setFormStatus({ isSubmitting: false, isSubmitted: true, error: null });
+
+      // Reset form after 3 seconds
+      setTimeout(() => {
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+        setFormStatus({ isSubmitting: false, isSubmitted: false, error: null });
+      }, 3000);
+    } catch (error) {
+      setFormStatus({ isSubmitting: false, isSubmitted: false, error: 'Something went wrong. Please try again.' });
+    }
+  };
+
+  return (
+    <div className="bg-gray-50 min-h-screen">
+      {/* Hero Section */}
+      <section className="bg-gradient-primary text-white py-20 px-4 relative overflow-hidden">
+        {/* Animated background elements */}
+        <motion.div
+          className="absolute top-20 left-10 w-64 h-64 rounded-full bg-white opacity-5"
+          animate={{
+            scale: [1, 1.2, 1],
+            x: [0, 20, 0],
+            y: [0, -20, 0]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+        <motion.div
+          className="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-accent-300 opacity-10"
+          animate={{
+            scale: [1, 1.3, 1],
+            x: [0, -30, 0],
+            y: [0, 30, 0]
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+
+        <div className="container mx-auto max-w-6xl text-center relative z-10">
+          <motion.div
+            style={{ opacity: heroOpacity, scale: heroScale }}
+          >
+            <motion.h1
+              className="text-4xl md:text-5xl font-serif font-bold mb-4"
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 100,
+                damping: 15,
+                delay: 0.2
+              }}
+            >
+              Contact{" "}
+              <motion.span
+                className="text-accent-300 inline-block"
+                animate={{
+                  scale: [1, 1.1, 1],
+                  color: ["#fdba74", "#f97316", "#fdba74"]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }}
+              >
+                Us
+              </motion.span>
+            </motion.h1>
+
+            <motion.p
+              className="text-xl opacity-90 max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 50,
+                damping: 20,
+                delay: 0.4
+              }}
+            >
+              We'd love to hear from you. Let's start a conversation.
+            </motion.p>
+
+            {/* Scroll indicator */}
+            <motion.div
+              className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white flex flex-col items-center"
+              ref={scrollIndicatorRef}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.5, duration: 1 }}
+            >
+              <p className="text-sm mb-2 opacity-80">Scroll to explore</p>
+              <motion.div
+                animate={{ y: [0, 10, 0] }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  repeatType: "loop"
+                }}
+              >
+                <FiArrowDown size={20} />
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Contact Content */}
+      <section className="py-16 px-4 relative overflow-hidden">
+        {/* Decorative elements */}
+        <motion.div
+          className="absolute top-40 left-0 w-32 h-32 rounded-full bg-primary-100 opacity-70"
+          animate={{
+            x: [0, 50, 0],
+            y: [0, 30, 0]
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+        <motion.div
+          className="absolute bottom-20 right-10 w-48 h-48 rounded-full bg-accent-100 opacity-60"
+          animate={{
+            x: [0, -30, 0],
+            y: [0, -40, 0]
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+
+        <div className="container mx-auto max-w-6xl relative z-10">
+          <div className="grid md:grid-cols-2 gap-12">
+            {/* Contact Info */}
+            <motion.div
+              className="bg-white rounded-lg shadow-md p-8 relative overflow-hidden"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 50,
+                damping: 20,
+                duration: 0.8
+              }}
+              viewport={{ once: true, amount: 0.3 }}
+              whileHover={{
+                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+              }}
+            >
+              {/* Background gradient */}
+              <motion.div
+                className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-primary-50 to-transparent opacity-50 -z-10"
+                animate={{
+                  opacity: [0.3, 0.5, 0.3]
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }}
+              />
+
+              <motion.h2
+                className="text-2xl font-serif font-bold text-gray-800 mb-6"
+                initial={{ opacity: 0, y: -20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+              >
+                Get in <span className="text-primary-600">Touch</span>
+              </motion.h2>
+
+              <motion.p
+                className="text-gray-600 mb-8"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                viewport={{ once: true }}
+              >
+                Have questions, feedback, or suggestions? Our team is here to help you find the perfect products.
+              </motion.p>
+
+              <motion.div
+                className="space-y-6"
+                variants={containerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.3 }}
+                animate={contactInfoControls}
+              >
+                {[
+                  {
+                    icon: <FiMail className="text-primary-600 text-xl" />,
+                    title: "Email",
+                    content: (
+                      <a href="mailto:info@productwhisper.com" className="hover:text-primary-600 transition-colors">
+                        info@productwhisper.com
+                      </a>
+                    )
+                  },
+                  {
+                    icon: <FiPhone className="text-primary-600 text-xl" />,
+                    title: "Phone",
+                    content: (
+                      <a href="tel:+11234567890" className="hover:text-primary-600 transition-colors">
+                        (123) 456-7890
+                      </a>
+                    )
+                  },
+                  {
+                    icon: <FiMapPin className="text-primary-600 text-xl" />,
+                    title: "Address",
+                    content: (
+                      <>
+                        123 Product Street<br />
+                        Tech City, TC 12345
+                      </>
+                    )
+                  },
+                  {
+                    icon: <FiClock className="text-primary-600 text-xl" />,
+                    title: "Business Hours",
+                    content: (
+                      <>
+                        Monday - Friday: 9AM - 5PM<br />
+                        Saturday: 10AM - 2PM
+                      </>
+                    )
+                  }
+                ].map((item, index) => (
+                  <motion.div
+                    key={index}
+                    className="flex items-start"
+                    variants={itemVariants}
+                    custom={index}
+                    whileHover={{ x: 5 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 10 }}
+                  >
+                    <motion.div
+                      className="bg-primary-50 p-3 rounded-full mr-4 flex-shrink-0"
+                      whileHover={{
+                        scale: 1.1,
+                        backgroundColor: "#e0f2fe"
+                      }}
+                    >
+                      {item.icon}
+                    </motion.div>
+                    <div>
+                      <motion.h3
+                        className="font-bold text-gray-800 mb-1"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ duration: 0.3, delay: 0.1 + (index * 0.1) }}
+                        viewport={{ once: true }}
+                      >
+                        {item.title}
+                      </motion.h3>
+                      <motion.p
+                        className="text-gray-600"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ duration: 0.3, delay: 0.2 + (index * 0.1) }}
+                        viewport={{ once: true }}
+                      >
+                        {item.content}
+                      </motion.p>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+
+              {/* Social Media Links */}
+              <motion.div
+                className="mt-10 pt-8 border-t border-gray-100"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <motion.h3
+                  className="font-bold text-gray-800 mb-4"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ duration: 0.3, delay: 0.7 }}
+                  viewport={{ once: true }}
+                >
+                  Connect With Us
+                </motion.h3>
+                <div className="flex space-x-4">
+                  {[
+                    { name: 'facebook', icon: <FiFacebook /> },
+                    { name: 'twitter', icon: <FiTwitter /> },
+                    { name: 'instagram', icon: <FiInstagram /> },
+                    { name: 'linkedin', icon: <FiLinkedin /> }
+                  ].map((social, index) => (
+                    <motion.a
+                      key={social.name}
+                      href={`#${social.name}`}
+                      className="bg-gray-100 hover:bg-primary-50 hover:text-primary-600 transition-colors p-3 rounded-full flex items-center justify-center"
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: 0.8 + (index * 0.1) }}
+                      viewport={{ once: true }}
+                      whileHover={{
+                        scale: 1.2,
+                        backgroundColor: "#e0f2fe",
+                        color: "#0284c7"
+                      }}
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      <span className="sr-only">{social.name}</span>
+                      {social.icon}
+                    </motion.a>
+                  ))}
+                </div>
+              </motion.div>
+            </motion.div>
+
+            {/* Contact Form */}
+            <motion.div
+              className="bg-white rounded-lg shadow-md p-8"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <h2 className="text-2xl font-serif font-bold text-gray-800 mb-6">Send Us a Message</h2>
+
+              {formStatus.isSubmitted ? (
+                <motion.div
+                  className="bg-green-50 border border-green-200 text-green-700 rounded-lg p-6 text-center"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="flex justify-center mb-4">
+                    <div className="bg-green-100 p-3 rounded-full">
+                      <FiMessageSquare className="text-green-500 text-2xl" />
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Thank You!</h3>
+                  <p>Your message has been sent successfully. We'll get back to you soon.</p>
+                </motion.div>
+              ) : (
+                <form className="space-y-6" onSubmit={handleSubmit}>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                        Full Name
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <FiUser className="text-gray-400" />
+                        </div>
+                        <input
+                          type="text"
+                          id="name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-gray-900"
+                          placeholder="John Doe"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                        Email Address
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <FiMail className="text-gray-400" />
+                        </div>
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-gray-900"
+                          placeholder="john@example.com"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
+                      Subject
+                    </label>
+                    <select
+                      id="subject"
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleChange}
+                      className="block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-gray-900"
+                      required
+                    >
+                      <option value="">Select a subject</option>
+                      <option value="general">General Inquiry</option>
+                      <option value="support">Customer Support</option>
+                      <option value="feedback">Feedback</option>
+                      <option value="partnership">Partnership Opportunities</option>
+                      <option value="careers">Careers</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                      Message
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      rows={5}
+                      className="block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-gray-900"
+                      placeholder="How can we help you?"
+                      required
+                    ></textarea>
+                  </div>
+
+                  <div className="flex items-center">
+                    <input
+                      id="privacy-policy"
+                      name="privacy-policy"
+                      type="checkbox"
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                      required
+                    />
+                    <label htmlFor="privacy-policy" className="ml-2 block text-sm text-gray-700">
+                      I agree to the <a href="#" className="text-primary-600 hover:text-primary-700">Privacy Policy</a>
+                    </label>
+                  </div>
+
+                  {formStatus.error && (
+                    <div className="text-red-500 text-sm">{formStatus.error}</div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={formStatus.isSubmitting}
+                    className={`w-full flex items-center justify-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors ${
+                      formStatus.isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    {formStatus.isSubmitting ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <FiSend className="mr-2" />
+                        Send Message
+                      </>
+                    )}
+                  </button>
+                </form>
+              )}
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Map Section */}
+      <section className="bg-white py-16">
+        <div className="container mx-auto max-w-6xl px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-serif font-bold text-gray-800 mb-4">Visit Our Office</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              We're located in the heart of Tech City. Feel free to stop by during business hours.
+            </p>
+          </div>
+
+          <div className="bg-gray-200 h-96 rounded-lg shadow-md overflow-hidden">
+            {/* This would be replaced with an actual map component */}
+            <div className="w-full h-full flex items-center justify-center bg-gray-100">
+              <p className="text-gray-500">Map placeholder - would integrate Google Maps or similar here</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default Contact;

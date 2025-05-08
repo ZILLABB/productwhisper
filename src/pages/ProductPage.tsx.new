@@ -1,0 +1,297 @@
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  FiStar,
+  FiBarChart2,
+  FiShoppingCart,
+  FiHeart,
+  FiShare2,
+  FiAlertCircle,
+  FiCheck,
+  FiX,
+  FiInfo,
+  FiTrendingUp,
+  FiMessageCircle,
+  FiList,
+  FiChevronRight,
+  FiArrowLeft,
+  FiThumbsUp
+} from 'react-icons/fi';
+import LoadingSpinner from '../components/common/LoadingSpinner';
+import { SplitLayout, ContentContainer, FlexLayout, GridLayout } from '../components/layout';
+
+interface ProductAttribute {
+  name: string;
+  score: number;
+  mentions: number;
+}
+
+interface ProductSpecification {
+  category: string;
+  items: { name: string; value: string }[];
+}
+
+interface ProductReview {
+  id: number;
+  user: string;
+  date: string;
+  rating: number;
+  title: string;
+  comment: string;
+  helpful: number;
+  sentiment: number;
+}
+
+interface ProductData {
+  id: number;
+  name: string;
+  brand: string;
+  description: string;
+  price: number;
+  originalPrice?: number;
+  rating: number;
+  reviewCount: number;
+  sentimentScore: number;
+  positiveAttributes: ProductAttribute[];
+  negativeAttributes: ProductAttribute[];
+  imageUrl: string;
+  category: string;
+  subcategory?: string;
+  specifications: ProductSpecification[];
+  reviews: ProductReview[];
+  relatedProducts?: { id: number; name: string; imageUrl: string; price: number }[];
+}
+
+export const ProductPage: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const [product, setProduct] = useState<ProductData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [activeTab, setActiveTab] = useState('overview');
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Mock data for demonstration
+        const mockProduct: ProductData = {
+          id: parseInt(id || '1'),
+          name: "Premium Wireless Headphones XM5",
+          brand: "SoundMaster",
+          description: "Experience crystal-clear audio with our premium wireless headphones. Featuring industry-leading active noise cancellation, 30-hour battery life, and comfortable over-ear design for extended listening sessions.",
+          price: 249.99,
+          originalPrice: 299.99,
+          rating: 4.7,
+          reviewCount: 1243,
+          sentimentScore: 0.85,
+          positiveAttributes: [
+            { name: "Sound quality", score: 0.92, mentions: 987 },
+            { name: "Battery life", score: 0.89, mentions: 845 },
+            { name: "Comfort", score: 0.87, mentions: 756 }
+          ],
+          negativeAttributes: [
+            { name: "Price", score: 0.42, mentions: 345 },
+            { name: "Bluetooth connectivity", score: 0.38, mentions: 187 }
+          ],
+          imageUrl: `https://source.unsplash.com/random/600x600/?headphones`,
+          category: "Electronics",
+          subcategory: "Audio",
+          specifications: [
+            {
+              category: "Audio",
+              items: [
+                { name: "Driver Size", value: "40mm" },
+                { name: "Frequency Response", value: "4Hz-40,000Hz" }
+              ]
+            }
+          ],
+          reviews: [
+            {
+              id: 1,
+              user: "AudioEnthusiast",
+              date: "2023-10-15",
+              rating: 5,
+              title: "Best headphones I've ever owned",
+              comment: "The sound quality is absolutely incredible, and the noise cancellation is on another level.",
+              helpful: 42,
+              sentiment: 0.95
+            }
+          ],
+          relatedProducts: [
+            { id: 2, name: "SoundMaster True Wireless Earbuds", imageUrl: "https://source.unsplash.com/random/300x300/?earbuds", price: 149.99 }
+          ]
+        };
+
+        setProduct(mockProduct);
+      } catch (err) {
+        setError('Failed to load product data. Please try again.');
+        console.error('Error fetching product:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <LoadingSpinner size="large" text="Loading product details..." />
+      </div>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <div className="container mx-auto px-4 py-12">
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+          <p className="flex items-center">
+            <FiAlertCircle className="mr-2" />
+            {error || "Product not found"}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Calculate sentiment color based on score
+  const getSentimentColor = (score: number) => {
+    if (score >= 0.8) return 'text-green-600';
+    if (score >= 0.6) return 'text-green-500';
+    if (score >= 0.4) return 'text-yellow-500';
+    if (score >= 0.2) return 'text-orange-500';
+    return 'text-red-500';
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <ContentContainer maxWidth="full" padding="sm" center>
+        {/* Breadcrumb Navigation */}
+        <nav className="mb-4">
+          <ol className="flex items-center space-x-2 text-xs sm:text-sm text-gray-500">
+            <li>
+              <Link to="/" className="hover:text-primary transition-colors">Home</Link>
+            </li>
+            <li>
+              <FiChevronRight className="inline-block" size={12} />
+            </li>
+            <li>
+              <Link to={`/search?category=${product.category}`} className="hover:text-primary transition-colors">
+                {product.category}
+              </Link>
+            </li>
+            <li>
+              <FiChevronRight className="inline-block" size={12} />
+            </li>
+            {product.subcategory && (
+              <>
+                <li>
+                  <Link to={`/search?category=${product.category}&subcategory=${product.subcategory}`} className="hover:text-primary transition-colors">
+                    {product.subcategory}
+                  </Link>
+                </li>
+                <li>
+                  <FiChevronRight className="inline-block" size={12} />
+                </li>
+              </>
+            )}
+            <li className="font-medium text-gray-900 truncate max-w-xs">
+              {product.name}
+            </li>
+          </ol>
+        </nav>
+
+        {/* Main Product Content */}
+        <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+          {/* Product Header */}
+          <div className="bg-gradient-to-r from-primary/5 to-transparent p-4 sm:p-5 border-b border-gray-100">
+            <FlexLayout
+              direction="col"
+              responsive={true}
+              align="start"
+              justify="between"
+              gap="sm"
+            >
+              <div>
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold font-display text-gray-900">{product.name}</h1>
+                <p className="text-sm text-gray-600 mt-1">By <span className="text-primary font-medium">{product.brand}</span> • {product.category} {product.subcategory && `• ${product.subcategory}`}</p>
+              </div>
+              <FlexLayout wrap="wrap" gap="xs" align="center">
+                <div className="flex items-center bg-white px-2.5 py-1 rounded-full shadow-sm border border-gray-100">
+                  <div className="flex mr-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span key={star} className={star <= Math.round(product.rating) ? "text-yellow-400" : "text-gray-300"}>★</span>
+                    ))}
+                  </div>
+                  <span className="font-semibold text-gray-900 text-sm">{product.rating}</span>
+                  <span className="text-gray-500 ml-1 text-xs">({product.reviewCount.toLocaleString()})</span>
+                </div>
+                <div className={`flex items-center px-2.5 py-1 rounded-full shadow-sm border border-gray-100 text-sm ${
+                  product.sentimentScore > 0.7 ? 'bg-green-50 text-green-700 border-green-100' :
+                  product.sentimentScore > 0.4 ? 'bg-yellow-50 text-yellow-700 border-yellow-100' :
+                  'bg-red-50 text-red-700 border-red-100'
+                }`}>
+                  <FiBarChart2 className="mr-1" size={14} />
+                  <span className="font-semibold">{Math.round(product.sentimentScore * 100)}%</span>
+                  <span className="ml-1 text-xs">sentiment</span>
+                </div>
+              </FlexLayout>
+            </FlexLayout>
+          </div>
+
+          {/* Product Content */}
+          <div className="p-4 sm:p-5">
+            <SplitLayout
+              ratio="2:1"
+              gap="md"
+              primary={
+                <div className="space-y-6">
+                  <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 aspect-square">
+                    <img
+                      src={product.imageUrl}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              }
+              secondary={
+                <div>
+                  {/* Tabs */}
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
+                    <nav className="flex border-b border-gray-100">
+                      {[
+                        { id: 'overview', label: 'Overview', icon: FiInfo },
+                        { id: 'sentiment', label: 'Sentiment Analysis', icon: FiBarChart2 }
+                      ].map((tab) => (
+                        <button
+                          key={tab.id}
+                          onClick={() => setActiveTab(tab.id)}
+                          className={`py-4 px-4 font-medium text-sm flex items-center flex-1 justify-center transition-colors ${
+                            activeTab === tab.id
+                              ? 'bg-primary/5 text-primary border-b-2 border-primary'
+                              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                          }`}
+                        >
+                          <tab.icon className="mr-2" size={16} />
+                          {tab.label}
+                        </button>
+                      ))}
+                    </nav>
+                  </div>
+                </div>
+              }
+            />
+          </div>
+        </div>
+      </ContentContainer>
+    </div>
+  );
+};
+
+export default ProductPage;

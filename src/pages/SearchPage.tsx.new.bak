@@ -1,0 +1,232 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  FiSearch, FiFilter, FiX, FiStar, FiTag, FiShoppingBag,
+  FiHeart, FiTrendingUp, FiSliders, FiChevronDown, FiChevronUp,
+  FiGrid, FiList, FiArrowUp, FiArrowDown
+} from 'react-icons/fi';
+
+// Mock data for demonstration
+const mockProducts = [
+  {
+    id: 1,
+    name: 'Premium Wireless Headphones',
+    brand: 'SoundMaster',
+    category: 'Electronics',
+    price: 199.99,
+    rating: 4.7,
+    reviews: 128,
+    description: 'High-quality wireless headphones with noise cancellation and premium sound.',
+    tags: ['wireless', 'noise-cancellation', 'premium'],
+    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80'
+  },
+  {
+    id: 2,
+    name: 'Smart Fitness Tracker',
+    brand: 'FitTech',
+    category: 'Wearables',
+    price: 89.99,
+    rating: 4.5,
+    reviews: 256,
+    description: 'Track your fitness goals with this advanced smart fitness tracker.',
+    tags: ['fitness', 'smart', 'wearable'],
+    image: 'https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80'
+  },
+  {
+    id: 3,
+    name: 'Ultra HD Smart TV',
+    brand: 'VisionPlus',
+    category: 'Electronics',
+    price: 799.99,
+    rating: 4.8,
+    reviews: 89,
+    description: 'Experience stunning visuals with this Ultra HD Smart TV with built-in streaming services.',
+    tags: ['smart tv', '4k', 'streaming'],
+    image: 'https://images.unsplash.com/photo-1593784991095-a205069470b6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80'
+  }
+];
+
+// Animation variants
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.3 } }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const cardVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: { 
+    y: 0, 
+    opacity: 1,
+    transition: { type: "spring", stiffness: 100, damping: 15 }
+  },
+  hover: { 
+    y: -5,
+    boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+    transition: { type: "spring", stiffness: 400, damping: 10 }
+  }
+};
+
+const SearchPage: React.FC = () => {
+  // State management
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showFilters, setShowFilters] = useState(true);
+  const [results, setResults] = useState<typeof mockProducts>([]);
+  const [loading, setLoading] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [sortBy, setSortBy] = useState<string>('relevance');
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
+  const [minRating, setMinRating] = useState<number>(0);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [trendingSearches] = useState<string[]>(['wireless headphones', 'smart watch', '4k tv', 'fitness tracker']);
+  
+  // Define categories and brands
+  const categories = ['Electronics', 'Wearables', 'Home', 'Kitchen', 'Audio', 'Computers', 'Phones', 'Accessories'];
+  const brands = ['SoundMaster', 'FitTech', 'VisionPlus', 'TechGear', 'HomeEssentials', 'SmartLife', 'AudioPro', 'GadgetWorld'];
+
+  // Handle search form submission
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim() || selectedCategories.length > 0) {
+      setLoading(true);
+      // Simulate API call
+      setTimeout(() => {
+        let filteredResults = mockProducts.filter(product => 
+          !searchQuery.trim() || 
+          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+        );
+        
+        // Apply filters
+        if (minRating > 0) {
+          filteredResults = filteredResults.filter(product => product.rating >= minRating);
+        }
+        
+        if (selectedCategories.length > 0) {
+          filteredResults = filteredResults.filter(product => 
+            selectedCategories.includes(product.category)
+          );
+        }
+        
+        filteredResults = filteredResults.filter(product => 
+          product.price >= priceRange[0] && product.price <= priceRange[1]
+        );
+        
+        // Apply sorting
+        switch (sortBy) {
+          case 'price-low':
+            filteredResults.sort((a, b) => a.price - b.price);
+            break;
+          case 'price-high':
+            filteredResults.sort((a, b) => b.price - a.price);
+            break;
+          case 'rating':
+            filteredResults.sort((a, b) => b.rating - a.rating);
+            break;
+          default:
+            // relevance - no additional sorting
+            break;
+        }
+        
+        setResults(filteredResults);
+        setLoading(false);
+      }, 800);
+    }
+  };
+  
+  // Handle category selection
+  const toggleCategory = (category: string) => {
+    setSelectedCategories(prev => 
+      prev.includes(category)
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
+    );
+  };
+  
+  // Handle price range change
+  const handlePriceChange = (min: number, max: number) => {
+    setPriceRange([min, max]);
+  };
+  
+  // Reset all filters
+  const resetFilters = () => {
+    setPriceRange([0, 1000]);
+    setMinRating(0);
+    setSelectedCategories([]);
+    setSortBy('relevance');
+  };
+
+  return (
+    <div className="bg-gray-50 min-h-screen">
+      {/* Search header */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center">
+            <div className="flex-1">
+              <form onSubmit={handleSearch} className="flex w-full max-w-lg">
+                <div className="relative flex-grow">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <FiSearch className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    type="text"
+                    className="block w-full rounded-l-md border-0 py-2.5 pl-10 pr-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm"
+                    placeholder="Search for a product..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="bg-primary-600 px-4 py-2.5 rounded-r-md text-sm font-medium text-white hover:bg-primary-700 transition-colors"
+                >
+                  Search
+                </button>
+              </form>
+            </div>
+            
+            <div className="ml-4 flex items-center">
+              <button
+                type="button"
+                onClick={() => setShowFilters(!showFilters)}
+                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+              >
+                {showFilters ? (
+                  <><FiX className="h-4 w-4 mr-2" /> Hide Filters</>
+                ) : (
+                  <><FiFilter className="h-4 w-4 mr-2" /> Filters</>
+                )}
+              </button>
+            </div>
+          </div>
+          
+          {/* Trending searches */}
+          <div className="mt-2 flex items-center text-sm">
+            <span className="text-gray-500 mr-2 text-xs">Trending:</span>
+            <div className="flex flex-wrap gap-2">
+              {trendingSearches.map((term, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    setSearchQuery(term);
+                    handleSearch(new Event('submit') as any);
+                  }}
+                  className="text-xs text-primary-600 hover:text-primary-800 hover:underline"
+                >
+                  {term}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
